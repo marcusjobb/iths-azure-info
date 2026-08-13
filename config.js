@@ -18,7 +18,7 @@ const config = {
   subscriptionNamn: "Azure for Students",
 
   // Ert favoritcitat
-  favoritCitat: "It's me, Hi! I'm the teacher it's me.",
+  favoritCitat: "You're on you're on kid!",
 
   // Er favoritartist
   favoritArtist: "Taylor Swift",
