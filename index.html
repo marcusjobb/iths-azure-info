@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azure Info</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      color: #8b949e;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .kodare {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+    }
+
+    .kodare-chip {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 2rem;
+      padding: 0.35rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e6edf3;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1a3a2a;
+      color: #3fb950;
+      border: 1px solid #238636;
+      border-radius: 2rem;
+      padding: 0.3rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      letter-spacing: 0.04em;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3fb950;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 860px;
+    }
+
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.3rem 1.5rem;
+    }
+
+    .card.accent {
+      border-color: #1f6feb;
+      background: #0d1f38;
+    }
+
+    .card label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card .value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 0.4rem;
+      color: #e6edf3;
+      word-break: break-all;
+    }
+
+    .card .value.mono {
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 0.9rem;
+      color: #79c0ff;
+    }
+
+    .card .value.region-display {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.2rem;
+    }
+
+    .region-flag {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .hierarchy {
+      grid-column: 1 / -1;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.3rem 1.5rem;
+    }
+
+    .hierarchy label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .hierarchy-chain {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .hier-item {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
+
+    .hier-item .hier-label {
+      font-size: 0.65rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .hier-item .hier-value {
+      font-weight: 600;
+      margin-top: 0.1rem;
+    }
+
+    .hier-arrow {
+      color: #30363d;
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: #8b949e;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Azure Info — ITHS Cloud 2025</h1>
+    <div class="kodare" id="kodare"></div>
+    <div class="status-badge">
+      <span class="dot"></span>
+      <span>Online</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card accent">
+      <label>Region</label>
+      <div class="value region-display">
+        <span class="region-flag" id="regionFlag"></span>
+        <span id="regionNamn"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Resource Group</label>
+      <div class="value" id="resourceGroup"></div>
+    </div>
+
+    <div class="card">
+      <label>App</label>
+      <div class="value" id="appNamn"></div>
+    </div>
+
+    <div class="card">
+      <label>Subscription</label>
+      <div class="value" id="subscriptionNamn"></div>
+    </div>
+
+    <div class="card">
+      <label>Favoritcitat</label>
+      <div class="value" id="favoritCitat"></div>
+    </div>
+
+    <div class="card">
+      <label>Favoritartist</label>
+      <div class="value" id="favoritArtist"></div>
+    </div>
+
+    <div class="hierarchy">
+      <label>Azure-hierarkin — var du befinner dig</label>
+      <div class="hierarchy-chain">
+        <div class="hier-item">
+          <div class="hier-label">Subscription</div>
+          <div class="hier-value" id="h-sub"></div>
+        </div>
+        <span class="hier-arrow">›</span>
+        <div class="hier-item">
+          <div class="hier-label">Resource Group</div>
+          <div class="hier-value" id="h-rg"></div>
+        </div>
+        <span class="hier-arrow">›</span>
+        <div class="hier-item">
+          <div class="hier-label">App</div>
+          <div class="hier-value" id="h-app"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="footer"></footer>
+
+  <script src="config.js"></script>
+  <script>
+    const regionNamn = {
+      "swedencentral":       { namn: "Sweden Central",       flagga: "🇸🇪" },
+      "germanywestcentral":  { namn: "Germany West Central", flagga: "🇩🇪" },
+      "northeurope":         { namn: "North Europe",         flagga: "🇮🇪" },
+      "westeurope":          { namn: "West Europe",          flagga: "🇳🇱" },
+      "eastus":              { namn: "East US",              flagga: "🇺🇸" },
+      "westus":              { namn: "West US",              flagga: "🇺🇸" },
+      "uksouth":             { namn: "UK South",             flagga: "🇬🇧" },
+      "francecentral":       { namn: "France Central",       flagga: "🇫🇷" },
+    };
+
+    const region = regionNamn[config.region] ?? { namn: config.region, flagga: "🌍" };
+
+    const kodareEl = document.getElementById("kodare");
+    config.kodare.forEach(namn => {
+      const chip = document.createElement("span");
+      chip.className = "kodare-chip";
+      chip.textContent = namn;
+      kodareEl.appendChild(chip);
+    });
+    document.getElementById("regionFlag").textContent     = region.flagga;
+    document.getElementById("regionNamn").textContent     = region.namn;
+    document.getElementById("resourceGroup").textContent  = config.resourceGroup;
+    document.getElementById("appNamn").textContent        = config.appNamn;
+    document.getElementById("subscriptionNamn").textContent = config.subscriptionNamn;
+    document.getElementById("favoritCitat").textContent    = `"${config.favoritCitat}"`;
+    document.getElementById("favoritArtist").textContent   = config.favoritArtist;
+
+    document.getElementById("h-sub").textContent     = config.subscriptionNamn;
+    document.getElementById("h-rg").textContent      = config.resourceGroup;
+    document.getElementById("h-app").textContent     = config.appNamn;
+
+    document.getElementById("footer").textContent =
+      `Deployad av ${config.kodare.join(" & ")} · Region: ${region.namn} · ${new Date().getFullYear()}`;
+  </script>
+</body>
+</html>
