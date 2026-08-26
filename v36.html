@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vecka 36 — Docker i produktion</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      padding: 3rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .week-badge {
+      display: inline-block;
+      background: #1f6feb;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #e6edf3;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      color: #8b949e;
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section {
+      margin-bottom: 2.2rem;
+    }
+
+    .section h2 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8b949e;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #21262d;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .topic-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+    }
+
+    .topic-card .icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .topic-card .label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 0.2rem;
+    }
+
+    .topic-card .desc {
+      font-size: 0.82rem;
+      color: #8b949e;
+      line-height: 1.4;
+    }
+
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .schedule-table td {
+      padding: 0.55rem 0.8rem;
+      border-bottom: 1px solid #21262d;
+      vertical-align: top;
+    }
+
+    .schedule-table td:first-child {
+      color: #8b949e;
+      white-space: nowrap;
+      width: 110px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .schedule-table td:last-child {
+      color: #e6edf3;
+    }
+
+    .exercises {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .exercise-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+    }
+
+    .diff-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+
+    .dot-green  { background: #22c55e; }
+    .dot-yellow { background: #facc15; }
+    .dot-red    { background: #ef4444; }
+
+    .exercise-row .text {
+      font-size: 0.88rem;
+      color: #c9d1d9;
+      line-height: 1.4;
+    }
+
+    .quote {
+      border-left: 3px solid #30363d;
+      padding: 0.6rem 1rem;
+      color: #8b949e;
+      font-style: italic;
+      font-size: 0.9rem;
+      margin-bottom: 2.2rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.78rem;
+      color: #484f58;
+      border-top: 1px solid #21262d;
+      padding-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="week-badge">Vecka 36</div>
+  <h1>Docker i produktion</h1>
+  <p class="subtitle">ITHS · Administrera molnlösningar · Marcus Ackre Medina</p>
+
+  <p class="quote">"It works on my machine." — Varje utvecklare, precis innan Docker löste det</p>
+
+  <div class="section">
+    <h2>Veckans ämnen</h2>
+    <div class="topic-grid">
+      <div class="topic-card">
+        <div class="icon">⚡</div>
+        <div class="label">Layer-caching</div>
+        <div class="desc">Lagerordning avgör byggtid. Rätt COPY-ordning sparar minuter per build.</div>
+      </div>
+      <div class="topic-card">
+        <div class="icon">📦</div>
+        <div class="label">Multi-stage build</div>
+        <div class="desc">Separera build-miljö från runtime. SDK i produktion är ett anti-pattern.</div>
+      </div>
+      <div class="topic-card">
+        <div class="icon">🙈</div>
+        <div class="label">.dockerignore</div>
+        <div class="desc">Exkludera bin/, obj/, .env. Glöms alltid — nu vet ni om det.</div>
+      </div>
+      <div class="topic-card">
+        <div class="icon">💓</div>
+        <div class="label">HEALTHCHECK</div>
+        <div class="desc">Kubernetes behöver veta om er container faktiskt svarar — inte bara startat.</div>
+      </div>
+      <div class="topic-card">
+        <div class="icon">🔐</div>
+        <div class="label">Secrets</div>
+        <div class="desc">ENV i Dockerfile = credentials i klartext. Key Vault + Managed Identity.</div>
+      </div>
+      <div class="topic-card">
+        <div class="icon">📋</div>
+        <div class="label">ACR + AcrPull</div>
+        <div class="desc">Azure Container Registry med Managed Identity — inga admin-credentials.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Dagens upplägg</h2>
+    <table class="schedule-table">
+      <tr><td>09:00–09:15</td><td>Närvaro + intro</td></tr>
+      <tr><td>09:15–12:00</td><td>Genomgång — Docker i produktion</td></tr>
+      <tr><td>12:00–13:00</td><td>Lunch</td></tr>
+      <tr><td>13:00–15:00</td><td>Övningar (parvis)</td></tr>
+      <tr><td>15:00–16:00</td><td>Genomgång, exit ticket, nästa vecka</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Övningar</h2>
+    <div class="exercises">
+      <div class="exercise-row">
+        <div class="diff-dot dot-green"></div>
+        <div class="text"><strong>Grundnivå</strong> — Multi-stage Dockerfile + .dockerignore + /health-endpoint. Kör lokalt.</div>
+      </div>
+      <div class="exercise-row">
+        <div class="diff-dot dot-yellow"></div>
+        <div class="text"><strong>Mellannivå</strong> — Pusha till ACR med Managed Identity (AcrPull-rollen) + kör på ACI.</div>
+      </div>
+      <div class="exercise-row">
+        <div class="diff-dot dot-red"></div>
+        <div class="text"><strong>Utmaning</strong> — HEALTHCHECK i Dockerfile. Verifiera att ACI rapporterar healthy.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Nästa vecka</h2>
+    <div class="topic-card" style="max-width: 480px;">
+      <div class="icon">☸️</div>
+      <div class="label">Vecka 37 — Kubernetes</div>
+      <div class="desc">Vad händer när ni har 20 containers som ska hålla igång sig själva, skala automatiskt och rulla ut uppdateringar utan downtime?</div>
+    </div>
+  </div>
+
+  <footer>
+    ITHS · Administrera molnlösningar HT26 · marcus.medina@nionit.com
+  </footer>
+
+</body>
+</html>
